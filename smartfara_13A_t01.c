@@ -87,25 +87,19 @@ int main(void)
         unsigned char i = 0, count_S1 = 0;
         while (i < 160)
         {
-            if (!(PINB & (1 << 1)))
-                count_S1++;
+            if (!(PINB & (1 << 1))) count_S1++;
             i++;
         }
-        if (count_S1 > 100)
-            flag_stop_on = 1;
-        else
-            flag_stop_on = 0;
+        if (count_S1 > 100) flag_stop_on = 1;
+        else flag_stop_on = 0;
     }
     for (;;)
     {
 
         Handler_stop_detection(mode); // Крутим соответствующую функцию в цикле при нажатии на педаль тормоза
         PORTB |= (1 << 4);            // Выключаем стоп/сигнал при отжатии
-        asm volatile("nop \n"
-                     "nop \n"
-                     "nop \n");
-        __asm__ __volatile__("sleep"
-                             "\n\t" ::); // Засыпаем, если не жмут на педаль тормоза
+        asm volatile( "nop \n" "nop \n" "nop \n");
+        __asm__ __volatile__ ( "sleep" "\n\t"::); //засыпаем, если не жмут на педаль тормоза
 
         // А здесь оказываемся после пробудки при нажатии на тормоз
     }
@@ -122,14 +116,11 @@ ISR(PCINT0_vect) // Нажали на педаль тормоза или отп�
     unsigned char i = 0, count_S1 = 0;
     while (i < 160)
     {
-        if (!(PINB & (1 << 1)))
-            count_S1++;
+        if (!(PINB & (1 << 1))) count_S1++;
         i++;
     }
-    if (count_S1 > 100)
-        flag_stop_on = 1;
-    else
-        flag_stop_on = 0;
+    if (count_S1 > 100) flag_stop_on = 1;
+    else flag_stop_on = 0;
 }
 
 void pause_t0_ms(unsigned int interval_ms)
@@ -157,19 +148,15 @@ void Handler_stop_detection(unsigned char mode)
                  "nop \n"
                  "nop \n"
                  "nop \n "); //
-    while (flag_stop_on)
-        (*arr_pf_stop_itteration[mode])(); // Запускаем ф-ю при нажатии на педаль тормоза
+    while (flag_stop_on) (*arr_pf_stop_itteration[mode])(); // Запускаем ф-ю при нажатии на педаль тормоза
 }
 
 unsigned char read_mode(void)
 {
-    unsigned char result = 0;
-    asm volatile("nop \n"
-                 "nop \n"); //
-    if (!(PINB & (1 << 2)))
-        result = 1; // mode 1 включен режим стробирования
-    else
-        result = 0; // mode 0 простой режим (вкл/выкл)
+    unsigned char result=0; 
+    asm volatile( "nop \n" "nop \n"); //
+    if (!(PINB & (1 << 2))) result = 1; // mode 1 включен режим стробирования
+    else result = 0; // mode 0 простой режим (вкл/выкл)
     return result;
 }
 
@@ -212,6 +199,5 @@ void stop_1 (void)
     if (flag_stop_on==0) return;
     PORTB&=~(1<<4); pause_t0_ms(500);PORTB|=(1<<4);pause_t0_ms(500);
     if (flag_stop_on==0) return;
-	//PORTB&=~(1<<4); pause_t0_ms(1500);PORTB|=(1<<4);
     PORTB&=~(1<<4); while(flag_stop_on); PORTB|=(1<<4);pause_t0_ms(500); // Включаем стоп-сигнал без строба до отжатия педали
 }
