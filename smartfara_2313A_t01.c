@@ -82,7 +82,7 @@ void (*arr_pf_left_itteration[])(void) = {
 	left_itr_4, // 001
 	left_itr_5, // 101
 	left_itr_6, // 011
-	left_itr_7	// просто бегущий огонь              // 1 1 1
+	left_itr_7  // просто бегущий огонь               // 1 1 1
 };
 void (*arr_pf_right_itteration[])(void) = {
 	// инициализиция массива указателей на функции правого поворотника
