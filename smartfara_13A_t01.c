@@ -60,9 +60,7 @@ int main(void)
     // INIT ports
     DDRB = 0b10000;
     PORTB = 0b11001;
-    asm volatile("nop \n"
-                 "nop \n"
-                 "nop \n");
+    asm volatile("nop \n" "nop \n" "nop \n");
 
     // INIT ext interrupts  PCINT1
     PCMSK |= (1 << PCINT1);
@@ -77,10 +75,8 @@ int main(void)
     OCR0A = 0x96; // В регистр сравнения заносим 1мс -->1200000\8*0,001=150; (0x96)
     sei();
     TIMSK0 |= 1 << OCIE0A; // Разрешаем прерывание по совпадению
-    asm volatile("nop \n"
-                 "nop \n"
-                 "nop \n");
-
+    asm volatile("nop \n" "nop \n" "nop \n");
+	
     mode = read_mode(); // Определяем режим (сторбирование (0) или простой(1))
     // Определим состояние педали тормоза до (нажатия/отжатия педали) после включения МК
     {
@@ -95,12 +91,10 @@ int main(void)
     }
     for (;;)
     {
-
         Handler_stop_detection(mode); // Крутим соответствующую функцию в цикле при нажатии на педаль тормоза
         PORTB |= (1 << 4);            // Выключаем стоп/сигнал при отжатии
         asm volatile( "nop \n" "nop \n" "nop \n");
         __asm__ __volatile__ ( "sleep" "\n\t"::); //засыпаем, если не жмут на педаль тормоза
-
         // А здесь оказываемся после пробудки при нажатии на тормоз
     }
 }
@@ -140,21 +134,14 @@ void pause_t0_ms(unsigned int interval_ms)
 
 void Handler_stop_detection(unsigned char mode)
 {
-    asm volatile("nop \n"
-                 "nop \n"
-                 "nop \n"
-                 "nop \n"
-                 "nop \n"
-                 "nop \n"
-                 "nop \n"
-                 "nop \n "); //
+    asm volatile("nop \n" "nop \n "); 
     while (flag_stop_on) (*arr_pf_stop_itteration[mode])(); // Запускаем ф-ю при нажатии на педаль тормоза
 }
 
 unsigned char read_mode(void)
 {
     unsigned char result=0; 
-    asm volatile( "nop \n" "nop \n"); //
+    asm volatile( "nop \n" "nop \n"); 
     if (!(PINB & (1 << 2))) result = 1; // mode 1 включен режим стробирования
     else result = 0; // mode 0 простой режим (вкл/выкл)
     return result;
@@ -174,29 +161,33 @@ void stop_1 (void)
     PORTB&=~(1<<4); pause_t0_ms(50);PORTB|=(1<<4);pause_t0_ms(60);
     PORTB&=~(1<<4); pause_t0_ms(60);PORTB|=(1<<4);pause_t0_ms(80);
     if (flag_stop_on==0) return;
-	PORTB&=~(1<<4); pause_t0_ms(55);PORTB|=(1<<4);pause_t0_ms(80);
-	PORTB&=~(1<<4); pause_t0_ms(60);PORTB|=(1<<4);pause_t0_ms(80);
-	PORTB&=~(1<<4); pause_t0_ms(60);PORTB|=(1<<4);pause_t0_ms(80);
-	PORTB&=~(1<<4); pause_t0_ms(60);PORTB|=(1<<4);pause_t0_ms(80);
-	PORTB&=~(1<<4); pause_t0_ms(60);PORTB|=(1<<4);pause_t0_ms(80);
-	if (flag_stop_on==0) return;
+	
+    PORTB&=~(1<<4); pause_t0_ms(55);PORTB|=(1<<4);pause_t0_ms(80);
+    PORTB&=~(1<<4); pause_t0_ms(60);PORTB|=(1<<4);pause_t0_ms(80);
+    PORTB&=~(1<<4); pause_t0_ms(60);PORTB|=(1<<4);pause_t0_ms(80);
+    PORTB&=~(1<<4); pause_t0_ms(60);PORTB|=(1<<4);pause_t0_ms(80);
+    PORTB&=~(1<<4); pause_t0_ms(60);PORTB|=(1<<4);pause_t0_ms(80);
+    if (flag_stop_on==0) return;
     
-	PORTB&=~(1<<4); pause_t0_ms(200);PORTB|=(1<<4);pause_t0_ms(200);
-	PORTB&=~(1<<4); pause_t0_ms(200);PORTB|=(1<<4);pause_t0_ms(200);
-    if (flag_stop_on==0) return;
-	PORTB&=~(1<<4); pause_t0_ms(200);PORTB|=(1<<4);pause_t0_ms(200);
-	PORTB&=~(1<<4); pause_t0_ms(200);PORTB|=(1<<4);pause_t0_ms(200);
-    if (flag_stop_on==0) return;
     PORTB&=~(1<<4); pause_t0_ms(200);PORTB|=(1<<4);pause_t0_ms(200);
     PORTB&=~(1<<4); pause_t0_ms(200);PORTB|=(1<<4);pause_t0_ms(200);
-    
-	if (flag_stop_on==0) return;
-	PORTB&=~(1<<4); pause_t0_ms(300);PORTB|=(1<<4);pause_t0_ms(300);
     if (flag_stop_on==0) return;
-	PORTB&=~(1<<4); pause_t0_ms(350);PORTB|=(1<<4);pause_t0_ms(350);
+	
+    PORTB&=~(1<<4); pause_t0_ms(200);PORTB|=(1<<4);pause_t0_ms(200);
+    PORTB&=~(1<<4); pause_t0_ms(200);PORTB|=(1<<4);pause_t0_ms(200);
     if (flag_stop_on==0) return;
-	PORTB&=~(1<<4); pause_t0_ms(400);PORTB|=(1<<4);pause_t0_ms(400);
+	
+    PORTB&=~(1<<4); pause_t0_ms(200);PORTB|=(1<<4);pause_t0_ms(200);
+    PORTB&=~(1<<4); pause_t0_ms(200);PORTB|=(1<<4);pause_t0_ms(200);  
     if (flag_stop_on==0) return;
+	
+    PORTB&=~(1<<4); pause_t0_ms(300);PORTB|=(1<<4);pause_t0_ms(300);
+    if (flag_stop_on==0) return;
+	
+    PORTB&=~(1<<4); pause_t0_ms(350);PORTB|=(1<<4);pause_t0_ms(350);
+    if (flag_stop_on==0) return;
+    PORTB&=~(1<<4); pause_t0_ms(400);PORTB|=(1<<4);pause_t0_ms(400);
+    if (flag_stop_on==0) return;	
     PORTB&=~(1<<4); pause_t0_ms(500);PORTB|=(1<<4);pause_t0_ms(500);
     if (flag_stop_on==0) return;
     PORTB&=~(1<<4); while(flag_stop_on); PORTB|=(1<<4);pause_t0_ms(500); // Включаем стоп-сигнал без строба до отжатия педали
