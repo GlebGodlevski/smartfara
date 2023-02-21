@@ -101,7 +101,7 @@ unsigned char read_mode(void);
 void CHECK_SET_START_CONDITION(void);
 
 int arrL[4] = {0, 1, 3, 4}; // выводы порта D для управления левым повортником
-int arrR[3] = {7, 6, 5};	// выводы порта B и (PD6)
+int arrR[3] = {7, 6, 5};    // выводы порта B и (PD6)
 
 int main(void)
 {
@@ -117,19 +117,19 @@ int main(void)
 
 	// INIT ext interrupts PCINT0, PCIN1
 	PCMSK0 |= (1 << PCINT0) | (1 << PCINT1); // Enabled PINs PCINT0, PCINT1
-	GIMSK |= (1 << PCIE0);					 // Enabled interrupt PCINT7..0
+	GIMSK |= (1 << PCIE0);			 // Enabled interrupt PCINT7..0
 	
 	// INIT SLEEP MODE 
 	MCUCR |= (1 << SM0);
 	MCUCR &= ~(1 << SM1); // Power-down
-	MCUCR |= (1 << SE);	  // Sleep_Enable
+	MCUCR |= (1 << SE);   // Sleep_Enable
 	
 
 	// init timers1 (16bit) 
 	cli();
 	OCR1AH = 0x01;
 	OCR1AL = 0xF4;
-	sei();				  // В регистр сравнения заносим 1мс --> (4000000/8)*0,001=500;
+	sei();		      // В регистр сравнения заносим 1мс --> (4000000/8)*0,001=500;
 	TIMSK |= 1 << OCIE1A; // Разрешаем прерывание по совпадению
     asm volatile( "nop \n" "nop \n" "nop \n");
 
@@ -139,8 +139,8 @@ int main(void)
 	for (;;)
 	{
 		Handler_left_detection(mode); // детектируем напряжение на левом поворотнике:
-									  //-на время  Uаб запускаем в цикле нужный режим.
-									  //-при снятии напряжения прерываем цикл - выходим из ф-и.
+					      //-на время  Uаб запускаем в цикле нужный режим.
+					      //-при снятии напряжения прерываем цикл - выходим из ф-и.
 		Handler_right_detection(mode);
 		__asm__ __volatile__("sleep" "\n\t" ::); // засыпаем	если нет Uаб на паворотниках
 		// А здесь оказываемся после пробудки при включении поворотников
@@ -318,7 +318,6 @@ void right_itr_6(void)
 	;
 }
 
-
 //  просто бегущий огонь                   // 1 1 1
 void left_itr_7(void)
 {
@@ -326,14 +325,14 @@ void left_itr_7(void)
 	unsigned char nibble_l = 0, nibble_h = 0;
 	for (i = 0; i < 4; i++)
 	{
-		nibble_l = ~(1 << arrL[i]);	 // 11111110  // --бегущий ноль
-		nibble_l &= 0b00011011;		 // 00011010  // сбрасываем все биты кроме индексных
+		nibble_l = ~(1 << arrL[i]);  // 11111110  // --бегущий ноль
+		nibble_l &= 0b00011011;	     // 00011010  // сбрасываем все биты кроме индексных
 		nibble_h = PORTD & 11100100; // ***00*00  // здесь сбраываем индексные биты
 		PORTD = nibble_h | nibble_l; // ***11 10  //
-		pause_t1_ms(100);			 // время горения блока LEDs
+		pause_t1_ms(100);	     // время горения блока LEDs
 	}
 	PORTD |= (1 << 0) | (1 << 1) | (1 << 3) | (1 << 4); // OFF
-	pause_t1_ms(400);									// Поворотник отдыхает. Пауза между иттерациями.
+	pause_t1_ms(400);		     // Поворотник отдыхает. Пауза между иттерациями.
 }
 void right_itr_7(void)
 {
@@ -341,5 +340,5 @@ void right_itr_7(void)
 	PORTB|=(1<<7);PORTB&=~(1<<6);pause_t1_ms(100);
 	PORTB|=(1<<6);PORTB&=~(1<<5);pause_t1_ms(100);
 	PORTB|=(1<<5);PORTD&=~(1<<6);pause_t1_ms(100);
-	PORTD|=(1<<6);pause_t1_ms(400); // Поворотник отдыхает. Пауза между иттерациями.	
+	PORTD|=(1<<6);pause_t1_ms(400);      // Поворотник отдыхает. Пауза между иттерациями.	
 }
