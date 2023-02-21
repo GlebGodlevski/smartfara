@@ -46,4 +46,4 @@ DC/DC преобразователь защищен самовостанавли
 
  - [smartfara_13A_t01.c](./smartfara_13A_t01.c) (для AVR ATTiny 13A)
  - [smartfara_2313A_t01.c](./smartfara_2313A_t01.c) (для AVR ATTiny 2313A)
- - 
+ 
