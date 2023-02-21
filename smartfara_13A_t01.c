@@ -134,7 +134,6 @@ void pause_t0_ms(unsigned int interval_ms)
 
 void Handler_stop_detection(unsigned char mode)
 {
-    asm volatile("nop \n" "nop \n "); 
     while (flag_stop_on) (*arr_pf_stop_itteration[mode])(); // Запускаем ф-ю при нажатии на педаль тормоза
 }
 
