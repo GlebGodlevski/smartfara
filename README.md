@@ -4,7 +4,7 @@
 <img src= "https://user-images.githubusercontent.com/93090351/220214213-8454c857-e380-4cd6-8bec-6d5210063901.JPG" alt="diagram" width="650"/>
 
 
-See smartfara_13A_t01.c [here](./smartfara_13A_t01.c) and smartfara_2313A_t01.c [here](./smartfara_2313A_t01.c)
+See  [smartfara_13A_t01.c](./smartfara_13A_t01.c) and  [smartfara_2313A_t01.c](./smartfara_2313A_t01.c)
 
 
 #### Firmware for board "SmartFara T-01"
