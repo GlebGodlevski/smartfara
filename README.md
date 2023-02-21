@@ -1,7 +1,6 @@
 # smartfara 
 # Плата управления поворотниками/стоп-сигналами для мотоцикла
 
-
 <img src= "https://user-images.githubusercontent.com/93090351/220214213-8454c857-e380-4cd6-8bec-6d5210063901.JPG" alt="diagram" width="650"/>
 
 #### Firmware for board "SmartFara T-01"
